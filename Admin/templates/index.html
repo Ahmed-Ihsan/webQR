@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scanner</title>
+    <style>
+        /* Modern CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .upload-section {
+            background: #f7fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-section:hover {
+            border-color: #4299e1;
+            background: #ebf8ff;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #4299e1;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .file-label:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #4299e1;
+            margin-bottom: 20px;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        .view-scans {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #4299e1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .view-scans:hover {
+            color: #3182ce;
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .upload-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>QR Code Scanner</h1>
+            <p>Upload an image containing a QR code to scan and process the data</p>
+        </div>
+        
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <div class="upload-section">
+                <div class="upload-icon">📷</div>
+                <div class="file-input-wrapper">
+                    <input type="file" name="file" id="file" class="file-input" accept="image/png, image/jpeg, image/jpg" required>
+                    <label for="file" class="file-label">Choose Image</label>
+                </div>
+                <p id="file-name" style="margin-bottom: 20px; color: #718096;"></p>
+                <button type="submit" class="submit-btn">Scan QR Code</button>
+            </div>
+        </form>
+
+        <a href="/scans" class="view-scans">View Previous Scans</a>
+    </div>
+
+    <script>
+        // Display selected filename
+        document.getElementById('file').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name;
+            document.getElementById('file-name').textContent = fileName || 'No file selected';
+        });
+    </script>
+</body>
+</html>

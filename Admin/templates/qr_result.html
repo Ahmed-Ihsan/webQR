@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Scan Result</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+            padding: 20px;
+            color: #2d3748;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #48bb78;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        .success-icon::after {
+            content: '✓';
+            color: white;
+            font-size: 40px;
+        }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0); }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .scan-time {
+            text-align: center;
+            color: #718096;
+            font-size: 0.9em;
+            margin-bottom: 30px;
+        }
+
+        .result-card {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .data-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .data-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .data-label {
+            font-size: 0.9em;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .data-value {
+            font-size: 1.2em;
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .unique-id {
+            font-family: monospace;
+            color: #805ad5;
+            background: #faf5ff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .primary-button {
+            background: #4299e1;
+            color: white;
+        }
+
+        .primary-button:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+
+        .secondary-button {
+            background: #edf2f7;
+            color: #4a5568;
+        }
+
+        .secondary-button:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        /* Copy button styles */
+        .copy-button {
+            padding: 4px 8px;
+            background: #edf2f7;
+            border: none;
+            border-radius: 4px;
+            color: #4a5568;
+            font-size: 0.8em;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .copy-button:hover {
+            background: #e2e8f0;
+        }
+
+        .copy-button.copied {
+            background: #48bb78;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .data-value {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="success-icon"></div>
+            <h1>QR Code Scanned Successfully</h1>
+            <p>The QR code has been successfully scanned and processed</p>
+        </div>
+
+        <div class="scan-time">
+            Scanned on {{ current_time }}
+        </div>
+
+        {% for item in data %}
+        <div class="result-card">
+            <div class="data-item">
+                <div class="data-label">Name</div>
+                <div class="data-value">
+                    {{ item[0] }}
+                    <button class="copy-button" onclick="copyToClipboard(this, '{{ item[0] }}')">Copy</button>
+                </div>
+            </div>
+
+            <div class="data-item">
+                <div class="data-label">Phone Number</div>
+                <div class="data-value">
+                    {{ item[1] }}
+                    <button class="copy-button" onclick="copyToClipboard(this, '{{ item[1] }}')">Copy</button>
+                </div>
+            </div>
+
+            <div class="data-item">
+                <div class="data-label">Unique ID</div>
+                <div class="data-value">
+                    <span class="unique-id">{{ item[2] }}</span>
+                    <button class="copy-button" onclick="copyToClipboard(this, '{{ item[2] }}')">Copy</button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="buttons">
+            <a href="/" class="button secondary-button">Scan Another Code</a>
+            <a href="/scans" class="button primary-button">View All Scans</a>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(button, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
